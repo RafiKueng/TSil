@@ -62,11 +62,19 @@
 % Settings
 % ------------------------------------------------------------------------
 
+% fuer nicht eingerueckter Absatzbegin folgendes auskommentieren:
+\setlength\parindent{0pt}    % laenge des absatzeinzuges festlegen
+
 \counterwithin{figure}{section}  % include section number in figure numbering
 \bibliographystyle{apa}      % bibliography style to use
 \graphicspath{{graphics/}}   % all graphics are in the graphics folder.
                              % by default, search there!
 
+% prevent empty pages with only one image by tweeking some parameters
+\renewcommand{\topfraction}{.8}
+\renewcommand{\floatpagefraction}{.8}  % if more than x % of a page is an image
+                                       % it will be a single image page.
+                             
 % document settings
 \title{Analysis and forecasting of the Swiss Rent Index, 1993 to 2018}
 \author{Faralli Zully, Spörri Marc}
@@ -89,11 +97,9 @@
 % ------------------------------------------------------------------------
 \begin{document}
 
-% title
-\maketitle
-\newpage
+% titlepage
 
-% insert the table of contents
+\maketitle
 \tableofcontents
 \newpage
 
@@ -324,7 +330,7 @@ Our final ARMA(p=1,q=2)-process is therefore the following \cite[p.~83]{bd02}:
 \TODO{Formel ueberpruefen! \textasciitilde{} vs $\sim$ vs $\propto$. ist hier in der Formel WN gemeint als: $W \cdot N(x)$ oder $W\!N(x)$}
 
 and the estimated coefficients with the corresponding standard errors (in brackets) are:
-
+%
 % Hier mal 2 variante: kompakt und lang
 %
 % Version kompakt
