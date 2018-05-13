@@ -1,11 +1,49 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage{chngcntr}
-\counterwithin{figure}{section}
-\usepackage[T1]{fontenc} \usepackage{lmodern} \usepackage[utf8]{inputenc} \usepackage[english]{babel} \usepackage{amssymb} \usepackage{amsmath} \usepackage[round]{natbib} \usepackage{xcolor,graphicx}
-\usepackage{fullpage}
-\author{Faralli Zully, Spörri Marc} \title{Analysis and forecasting of the Swiss Rent Index, 1993 to 2018} \date{\today}
+%
+% Analysis and forecasting of the Swiss Rent Index
+% 1993 to 2018
+%
+% authors:      Faralli Zully, Spörri Marc
+% date-hand-in: 2018-05
+%
 
+\documentclass[11pt,a4paper]{article}
+
+% Setup packages
+% ------------------------------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} 
+
+\usepackage[english]{babel}  % language settings
+\usepackage{lmodern}         % font to use
+\usepackage{chngcntr}
+
+\usepackage{graphicx}        % use modern graphics formats
+
+\usepackage{amsmath}         % math packages
+\usepackage{amssymb}
+
+\usepackage[round]{natbib}   % bibliography options
+
+\usepackage{xcolor}          % use color names
+
+\usepackage{fullpage}
+
+
+% Settings
+% ------------------------------------------------------------------------
+\counterwithin{figure}{section}
+
+
+\title{Analysis and forecasting of the Swiss Rent Index, 1993 to 2018}
+\author{Faralli Zully, Spörri Marc}
+\date{\today}
+
+
+% The actual document
+% ------------------------------------------------------------------------
 \begin{document}
+
 % generates the title
 \maketitle
 \pagebreak
@@ -13,19 +51,35 @@
 \tableofcontents
 \pagebreak
 
+
+% ------------------------------------------------------------------------
+
 \section{Introduction}
-In this project we analyze the time series of the quarterly collected Swiss rent index from 1993 to 2018. The main goal of the project is to draw inference from the rent index time series and to predict its
-future values and a future trend. In order to do that we do first a transformation of the data in a mean-centered
-stationary time series by eliminating the trend and possible seasonal components. Afterwards we are going to model our transformed, stationary data by fitting and testing a set of autoregressive moving average processes (ARMA) in order to select the best candidate model for our transformed, stationary data \cite[p.~82--110]{bd02}. The selected model will be used to describe and interpret our data as well as to predict future values for the Swiss rent index.
+
+In this project we analyze the time series of the quarterly collected Swiss rent index from 1993 to 2018.
+The main goal of the project is to draw inference from the rent index time series and to predict its future values and a future trend.
+In order to do that we do first a transformation of the data in a mean-centered stationary time series by eliminating the trend and possible seasonal components.
+Afterwards we are going to model our transformed, stationary data by fitting and testing a set of autoregressive moving average processes (ARMA) in order to select the best candidate model for our transformed, stationary data \cite[p.~82--110]{bd02}.
+The selected model will be used to describe and interpret our data as well as to predict future values for the Swiss rent index.
+
+
+% ------------------------------------------------------------------------
 
 \section{Data Description}
+
 The data is provided by the Swiss Federal Statistical Office, implying 100 quarterly observations of the Swiss rent index beginning by the 2nd quarter of the year 1993 and ending by the first quarter of the year 2018. The rent index measures the inflation of the rented dwellings in Switzerland. It is the most significant partial index of the Swiss consumer’s price index, representing a weighted share of 13 percent of this index. \\
 The data are collected quarterly, based upon a stratified random survey sampling of around 10'000 lessors. The time series' first observation (2nd quarter of the year 1993) will be the reference value which is set to a base index of 100 and represents the weighted average rent at this time in Switzerland (OFS, 2016: p. 20-23).
+
+
+% ------------------------------------------------------------------------
 
 \section{Data Analysis}
 The first step in any analysis of a time series is to plot the data in order to identify discontinuities or a sudden change of level in the series\cite[p.~23]{bd02}. As we can see from figure~\ref{fig:indiceloyers_timeseries} there seems to be a clear positive monotonic trend in the time series of the Swiss rent index. However, the increase seems to be higher in the 1990ies. It may be advisable to analyse the series by breaking it into two segments \cite[p.~23]{bd02} . For that purpose we have a look at the segmented plots 1993 to 2009 and 2009 to 2018 (see figure~\ref{fig:indiceloyers_test_train}). \\
 We can see a slightly slower increase in the period from 2009 to 2018 indicating that during the years 1993 to 2009 the growth in rents was faster than in the years after the year 2009. This fact can be well explained by the big real estate depression in the early 90ies in Switzerland, therefore the time series starting at 1993 is consequently starting from a relatively low initial level and, given the low initial level and the better conjunctural perspectives, the growth  was faster during the 1990ies (irgendwas zitieren 90er jahre depression), whereas from the year 2009 on the growth in rents slowed down, which can be very well explained by the US subprime crises triggered in the year 2008 and followed by a long-lasting global recession (zitiere irgendwas). \\
 However, they are apparently no outliers, sudden changes or major discontinuities and there is evidently no reason to do further data adjustments or variance-stabilizing transformations like Box-Cox-transformations, for instance {boxcox64}. Therefore we start our work in the next section by transforming our data into a stationary time series \cite[p.~45--82]{bd02}.
+
+
+% ------------------------------------------------------------------------
 
 \section{Transformation of the Data into a Stationary Time Series}
 In this section we want to produce a noise sequence with no apparent deviations from stationarity, meaning we want to transform our data in such a way that covariances between the observations are not depending on time and that we obtain a zero mean expectation and constant variances \cite[pp.~14--23]{bd02}. \\
@@ -111,6 +165,8 @@ The Augmented-Dickie-Fuller- and the KPSS-Test suggest for the once- as well as 
 by subtracting the mean so that they are prepared fit and test ARMA-models.
 
 
+% ------------------------------------------------------------------------
+
 \section{Fitting and Testing the Model} \label{Fitting and Testing the Model}
 \subsection{Order and model selection}
 From the sample ACF and PACF (figure~\ref{fig:diff12_acf_pacf}) of our twice-differenced series we can see from the ACF-plot a highly significant spike at the first auto-correlation $\hat{Rho_1}$ and the following bars dying out quickly and lying inside the 95percent-confidence – bounds. The combined view of the PACF-plot with its exponentially decreasing patterns (in absolute values) and the 1 spike in the ACF-plot let us suggest an MA(1)-model could fit our data quite well.
@@ -180,12 +236,18 @@ This smooth positively predicted trend goes confirm not only by the long-lasting
 
 
 
+% ------------------------------------------------------------------------
+
 \section{Discussion}
 Discuss your results, the strengths and the limitations of your own analysis. 
 
 The difficulty of this project and on the same time is success was to get the data transformed into a stationary process in a way that the residuals don't show too much randomness (white-noise) on the one hand, and on the other hand that we get at least of significant auto-correlations $\hat{Rho}$ anyhow in order to allow predictions based on past observations. That was not an easy, since the initial time series was strongly monotonically increasing and therefore strongly positively auto-correlated, hence, obtaining a stationary series becomes a hard task: first trend elimination by polynomial trend fitting is not possible because of the heavy auto-covariances, second once-differencing turned out to be not practicable neither and causing the opposite problems, meaning too much white noise.  but differencing the data twice did the job. On the same time, the twice-differenced-transformation turned out to contain minor modelling issues since there existed the danger of overdifferencing \cite[~p.194]{bd02}, indicated by the unit root in the moving-average polynomials in case of an MA(1)-model and in the ARMA(1,1) whose estimated theta1 coefficients were on the unit circle or very close to the unit circle. The problem here lies in the maximum likelihood estimation which possesses properties which chan pose problems for estimation\citep{davidson81}. When a root of the process is close to the unit circle the asymptotic distribution of the maximum likelihood can be quite inadequate. However, the estimation by maximum likelihood differ only slightly from other estimations by other methods as  \citep{davisdunsmuir96} have shown. Therefore our "problematic" estimate of theta close to 1 can still be considered quite accurate. Furthermore \citep{plosser77} underline that a root close to the unit circle is not that big of a deal as long as the perturbances of overdifferencing are understandable.\\ 
 To conclude, the choice of the correct data transformation was the dilemma between once-differentiation which leads to a white-noise series which doesn't allow good prediction, and the twice-differentiation which allows better prediction but suffers possible over-differentiation..
 However, our model of choice, the ARMA(1,2) process, doesn't show unit root problems any more, but its theta coefficients lack of reliability since its standard errors were not that small. In the context of large variance the relatively small n of 100 observations played an important role here. Hence, for further predictions on the rent index more data would be desirable.
+
+
+
+% ------------------------------------------------------------------------
 
 \section{Conclusion}
 Conclude the report. Sketch further analyses that you could carry out if you would have more time.
@@ -197,6 +259,11 @@ Last but not least, furthermore improving work could be done during the transfor
 \bibliographystyle{apa}
 
 \pagebreak
+
+
+
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
 
 \appendix
 \section{Tables}
@@ -214,6 +281,9 @@ width=0.7\textwidth]{summary_seasonmodel}
 \caption{summary statistics of the fitted seasonal model\label{fig:summary_seasonmodel}}
 \end{figure}
 
+
+% ------------------------------------------------------------------------
+
 \section{Cross-validation of the twice-differenced series}
 Cross-validation with a test data set considering only the last 35 of the 100 observations (see figure~\ref{fig:diff2_testset} above) confirms furthermore the non-stationary character of the twice-differenced-model 
 Box.test(d2.indiceloyers.test, lag=2, type="Ljung-Box") p-value of 0.033 suggests the data are (time-)independent
@@ -227,4 +297,7 @@ width=0.8\textwidth]{diff2_test_train}
 \caption{mean-centered twice-differenced series, periods from 1993 to 2009 and 2009 to 2018
 \label{fig:diff2_test_train}}
 \end{figure}
+
+
+
 \end{document} 
