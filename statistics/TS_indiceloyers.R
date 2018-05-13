@@ -9,11 +9,11 @@ library(forecast)
 
 #importation of data (quarterly indice des loyers, y1993-2017)
 
-#indiceloyers1993quarterly<-read.csv("C:/Users/Spörri/Desktop/Marc UniNE/SS 18 Time Series Analysis/TS Project/indiceloyers1993quarterly.csv", header = TRUE, sep = ";")
-#save(indiceloyers1993quarterly, file = "C:/Users/Spörri/Desktop/Marc UniNE/SS 18 Time Series Analysis/TS Project/indiceloyers1993quarterly.RData")
+#indiceloyers1993quarterly<-read.csv("data/indiceloyers1993quarterly.csv", header = TRUE, sep = ";")
+#save(indiceloyers1993quarterly, file = "data/indiceloyers1993quarterly.RData")
 
 #data 1993-2017 quarterly (100 obs.)
-load("C:/Users/Spörri/Desktop/Marc UniNE/SS 18 Time Series Analysis/TS Project/indiceloyers1993quarterly.RData")
+load("data/indiceloyers1993quarterly.RData")
 
 indiceloyers <- indiceloyers1993quarterly #load indiceloyers1993quarterly Data (100 Observations)
 
