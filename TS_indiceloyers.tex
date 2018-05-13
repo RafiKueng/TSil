@@ -34,6 +34,8 @@
 % ------------------------------------------------------------------------
 \counterwithin{figure}{section}
 
+\graphicspath{{graphics/}}   % all graphics are in the graphics folder.
+                             % by default, search there!
 
 \title{Analysis and forecasting of the Swiss Rent Index, 1993 to 2018}
 \author{Faralli Zully, Spörri Marc}
@@ -44,12 +46,13 @@
 % ------------------------------------------------------------------------
 \begin{document}
 
-% generates the title
+% title
 \maketitle
-\pagebreak
+\newpage
+
 % insert the table of contents
 \tableofcontents
-\pagebreak
+\newpage
 
 
 % ------------------------------------------------------------------------
@@ -89,19 +92,19 @@ In order to get our noise sequence we have to eliminate any trend and/or seasona
 Furthermore we test the estimated noise sequences by examining some simple tests whether or not the obtained residuals are values of independent and identically distributed random variables (as mentioned above: that should not necessarily occur, otherwise we would be confronted with too much randomness in our stationary series and our prediction work would be simply done by estimating mean of the white-noise, which is zero for all predictions $X_{t+1}$, $X_{t+2}$, $X_{t+3}$ etc. in case of a mean-centered stationary series). \\
 In a final step we check them visually by plotting the autocorrelation-function as well as the partial auto-correlation in order to get sure that we are not modelling a white noise sequence on the one hand, and to get an idea of the orders of p and q, respectively for a possible ARMA(p,q)-model, on the other hand \cite[pp.~83--110]{bd02}.
 Once we have found a good way to transform our data into a stationary series we will fitting and testing a set of candidate models for our transformed data in section~\ref{Fitting and Testing the Model}.
-\\
+
 \begin{figure}[!ht]
-\centering
-\includegraphics[angle=0,
-width=0.7\textwidth]{indiceloyers_timeseries}
-\caption{Swiss rent index, years 1993 to 2018\label{fig:indiceloyers_timeseries}}
+    \centering
+    \includegraphics[angle=0,width=0.7\textwidth]{indiceloyers_timeseries}
+    \caption{Swiss rent index, years 1993 to 2018}
+    \label{fig:indiceloyers_timeseries}
 \end{figure}
  
 \begin{figure}[!htb]
-\centering
-\includegraphics[angle=0,
-width=0.8\textwidth]{indiceloyers_test_train}
-\caption{Swiss Rent index, periods from 1993 to 2009 and from 2009 to 2018}\label{fig: indiceloyers_test_train}
+    \centering
+    \includegraphics[angle=0,width=0.8\textwidth]{indiceloyers_test_train}
+    \caption{Swiss Rent index, periods from 1993 to 2009 and from 2009 to 2018}
+    \label{fig:indiceloyers_test_train}
 \end{figure}
 
 \subsection{Method 1: Trend Elimination by fitting polynomial models}
@@ -258,7 +261,7 @@ Last but not least, furthermore improving work could be done during the transfor
 \bibliography{bibliography}
 \bibliographystyle{apa}
 
-\pagebreak
+\newpage
 
 
 
