@@ -14,30 +14,15 @@
 \pagebreak
 
 \section{Introduction}
-describe aims of your project and give an overview of the report. describe briefly the methods you have used to analyze the data.
-\\
-\\
 In this project we analyze the time series of the quarterly collected Swiss rent index from 1993 to 2018. The main goal of the project is to draw inference from the rent index time series and to predict its
 future values and a future trend. In order to do that we do first a transformation of the data in a mean-centered
 stationary time series by eliminating the trend and possible seasonal components. Afterwards we are going to model our transformed, stationary data by fitting and testing a set of autoregressive moving average processes (ARMA) in order to select the best candidate model for our transformed, stationary data \cite[p.~82--110]{bd02}. The selected model will be used to describe and interpret our data as well as to predict future values for the Swiss rent index.
 
 \section{Data Description}
-Describe the data and the context in which it has been gathered and explain. Give some general references about the data.
-\\
-\\
 The data is provided by the Swiss Federal Statistical Office, implying 100 quarterly observations of the Swiss rent index beginning by the 2nd quarter of the year 1993 and ending by the first quarter of the year 2018. The rent index measures the inflation of the rented dwellings in Switzerland. It is the most significant partial index of the Swiss consumer’s price index, representing a weighted share of 13 percent of this index. \\
 The data are collected quarterly, based upon a stratified random survey sampling of around 10'000 lessors. The time series' first observation (2nd quarter of the year 1993) will be the reference value which is set to a base index of 100 and represents the weighted average rent at this time in Switzerland (OFS, 2016: p. 20-23).
 
 \section{Data Analysis}
-Describe your models carefully, give references, justify your choices. You can use the guidelines provided below.
-\\1. Do you transform the data? If yes, give the transformation you used and explain this choice. 2. Does the series show a trend and a seasonality? 
-\\If yes, describe how you model them. Check the plot of the residuals. 
-\\3. Comment the autocorrelation and the partial autocorrelation of the residual series obtained after removing the trend and seasonality.
-\\4. Model the residuals with an appropriate model. If you consider different models, explain strengths and weaknesses of each model.
-\\5. Comment the diagnostig plots of the model(s) you chose. you can plot the standardized residuals, the normal qqplot, the ACF and PACF of the residuals, and the p-value of the Ljung-Box-Tests \citep{LjungBox78} for different lags to assess stationarity, independence and normality of the residuals.
-\\6. By means of your model, make some predictions and give confidence intervals for the prediction. you can illustrate it by showing some plots.
-\\
-\\
 The first step in any analysis of a time series is to plot the data in order to identify discontinuities or a sudden change of level in the series\cite[p.~23]{bd02}. As we can see from figure~\ref{fig:indiceloyers_timeseries} there seems to be a clear positive monotonic trend in the time series of the Swiss rent index. However, the increase seems to be higher in the 1990ies. It may be advisable to analyse the series by breaking it into two segments \cite[p.~23]{bd02} . For that purpose we have a look at the segmented plots 1993 to 2009 and 2009 to 2018 (see figure~\ref{fig:indiceloyers_test_train}). \\
 We can see a slightly slower increase in the period from 2009 to 2018 indicating that during the years 1993 to 2009 the growth in rents was faster than in the years after the year 2009. This fact can be well explained by the big real estate depression in the early 90ies in Switzerland, therefore the time series starting at 1993 is consequently starting from a relatively low initial level and, given the low initial level and the better conjunctural perspectives, the growth  was faster during the 1990ies (irgendwas zitieren 90er jahre depression), whereas from the year 2009 on the growth in rents slowed down, which can be very well explained by the US subprime crises triggered in the year 2008 and followed by a long-lasting global recession (zitiere irgendwas). \\
 However, they are apparently no outliers, sudden changes or major discontinuities and there is evidently no reason to do further data adjustments or variance-stabilizing transformations like Box-Cox-transformations, for instance {boxcox64}. Therefore we start our work in the next section by transforming our data into a stationary time series \cite[p.~45--82]{bd02}.
@@ -47,8 +32,7 @@ In this section we want to produce a noise sequence with no apparent deviations 
 However, the objective is not to get a pure white noise sequence  with no dependence among the residuals neither, since there would no further modelling to be done except to estimate their mean-expectation (which would be zero in the centered transformed series) and variance. The objective is to obtain a stationary series with some few significant dependence among the residuals anyhow, so we can look for a more complex stationary time series model for the noise that accounts for the dependence. Since dependence means that past observations of the noise sequence can assist in predicting future values this allows us to get a better prediction quality than with a pure white noise sequence \cite[p.~35]{bd02}. \\
 
 In order to get our noise sequence we have to eliminate any trend and/or seasonal components from our data. In the next few subsections we will fit several models to get a stationary series. Afterwards we check our fitted models first for stationarity by tests like the Augmented Dickie-Fuller-Test for the null hypothesis of a unit root (with the alternative hypothesis of stationarity, by consequence \citep{adf}) as well as the Kwiatkowski-Phillips-Schmidt-Shin-Test (KPSS-Test) for the null hypothesis that the observations are trend stationary \citep{kpss92}. \\
-Furthermore we test the estimated noise sequences by examining some simple tests 
-whether the obtained residuals are values of independent and identically distributed random variables (as mentioned above: that should not occur, otherwise we have to much randomness and our prediction work would be simply done by estimating mean and variance of the white-noise). \\
+Furthermore we test the estimated noise sequences by examining some simple tests whether or not the obtained residuals are values of independent and identically distributed random variables (as mentioned above: that should not necessarily occur, otherwise we would be confronted with too much randomness in our stationary series and our prediction work would be simply done by estimating mean of the white-noise, which is zero for all predictions $X_{t+1}$, $X_{t+2}$, $X_{t+3}$ etc. in case of a mean-centered stationary series). \\
 In a final step we check them visually by plotting the autocorrelation-function as well as the partial auto-correlation in order to get sure that we are not modelling a white noise sequence on the one hand, and to get an idea of the orders of p and q, respectively for a possible ARMA(p,q)-model, on the other hand \cite[pp.~83--110]{bd02}.
 Once we have found a good way to transform our data into a stationary series we will fitting and testing a set of candidate models for our transformed data in section~\ref{Fitting and Testing the Model}.
 \\
@@ -58,82 +42,57 @@ Once we have found a good way to transform our data into a stationary series we 
 width=0.7\textwidth]{indiceloyers_timeseries}
 \caption{Swiss rent index, years 1993 to 2018\label{fig:indiceloyers_timeseries}}
 \end{figure}
-\subsection{Testing Seasonal effects}
-As we have seen in figure~\ref{fig:indiceloyers_timeseries} a trend was obviously visible, however we cannot be that sure if it doesn't exist a seasonal component neither. Therefore we check first whether there exist (or not) possible seasonal components, afterwards we want get rid of the trend. 
+ 
 \begin{figure}[!htb]
 \centering
 \includegraphics[angle=0,
 width=0.8\textwidth]{indiceloyers_test_train}
 \caption{Swiss Rent index, periods from 1993 to 2009 and from 2009 to 2018}\label{fig: indiceloyers_test_train}
 \end{figure}
-\\
-Since the data are collected quarterly we use a linear regression model with d=4 dummy predictors to check for significant seasonal coefficients, meaning a dummy for every quarter (LN1-2, p. 36). 
-\begin{figure}[!htb]
-\centering
-\includegraphics[angle=0,
-width=0.7\textwidth]{summary_seasonmodel}
-\caption{summary statistics of the fitted seasonal model\label{fig:summary_seasonmodel}}
-\end{figure}
-As we can see from figure~\ref{fig:summary_seasonmodel} none of the estimated seasonal coefficients are significant. We can be sure now that they are no seasonal impacts on our data, hence what remains to do is to eliminate the trend. 
-(Our twice-differenced, non-seasonal decomposition model looks like the following \cite[p.~24]{bd02}:
-\begin{equation}
-X_t = m_t + Y_t, \text{t = 1,...,n,} 
-\\where EY_t = 0 and m_t is the trend component and Y_t is the white-noise
-\end{equation} )
 
 \subsection{Method 1: Trend Elimination by fitting polynomial models}
-As we have shown in the above subsection, we don't have to get rid of seasonal components, nevertheless we have to get rid of the obvious trend. Whilst the time series \ref{fig:indiceloyers_timeseries} indicates a probable polynomial trend, especially a linear one, we are starting by fitting different polynomial trends by ordinary least squares estimation \citep{ols}.\\
-\subsubsection{Modelling the estimated noise sequence}
-We are now modelling a noise sequence (residual time series) by estimating and subtracting a linear, a quadratic, a cubic as well as a logarithmic trend. The latter  helps to transform a potentially exponential increase in the rent index into a linear trend, even though the time series \ref{fig:indiceloyers_timeseries} looks more like a linear than an exponential trend at first glance, we are going to test for a logarithmic trend either.
-\\
-\begin{figure}[!htb]
-\centering
-\includegraphics[angle=0,
-width=0.7\textwidth]{summary_cubicmodel}
-\caption{summary statistics of the fitted cubic model\label{fig:summary_cubicmodel}}
-\end{figure}
-The coefficients in all 4 models are highly significant and with an coefficient of determination (the adjusted $R^2$) of around 98 to 99 percent \footnote{This means that the polynomials can predict upto 98 to 99 percent of the variance of the variance in the dependent variable (rent index}, the linear, the quadratic and the cubic model would explain our data extremely well (which is not surprising given the fact that the trend is consistently positive monotonic and therefore highly consistent with other positively monotonic models as our 4 polynomial trend models are).
-The logarithmic model showed a bit less explanatory power with an $R^2$-Value of 0.72, even though its coefficient is highly significant as well. \footnote{We have to be careful with the interpretation of the p-values since this regression models assume independence of the observations (which hardly never holds true in a time series except white-noise). we don't want to do inference, our purpose of the summary statistics of fitted linear models is a different one: we want to get an idea whether there is a polynomial trend to eliminate in the time series in order to get the series stationary}
+Since the time series \ref{fig:indiceloyers_timeseries} indicates a probable polynomial trend, especially a linear one, we are starting by fitting different polynomial trends by ordinary least squares estimation \cite[p.~11]{htf09}.\\
 
-\begin{figure}[!htb]
+We are now modelling a noise sequence (residual time series) by estimating and subtracting a linear, a quadratic, a cubic as well as a logarithmic trend. The latter  helps to transform a potentially exponential increase in the rent index into a linear trend, even though at first glance the time series figure~\ref{fig:indiceloyers_timeseries} looks more like a linear than an exponential trend, we are going to test for a logarithmic trend either.\\
+
+The regression models by ordinary least squares estimation \cite[p.~11]{htf09} showed highly significant trend coefficients for all for polynomial models and no significant seasonal effects\footnote{Since the data are collected quarterly we used a linear regression model with d=4 dummy predictors to check for significant seasonal coefficients, meaning a dummy for every quarter}. \\
+So all of the polynomial models would explain our data extremely well, which is indeed not surprising given the fact that the trend is consistently positive monotonic and therefore highly consistent with other positively monotonic models as our 4 polynomial trend models are (further details on the estimated trend and seasonal coefficients as well as their significance can be found in figure~\ref{fig:summary_cubicmodel} in the tables appendix).\footnote{Interpretation of p-values of regression model coefficients are to be handled with care in the case of time series since these models are assuming independence of the observations which hardly never holds true in a time series except white-noise. One has to keep in mind that in case of time series we don't want to draw inference on the regression coefficients, our purpose for the regression coefficients is a different one: by looking at their p-value we get an idea whether or not there is a polynomial trend to eliminate in order to get a stationary time series} \\
+\begin{figure}[!ht]
 \centering
 \includegraphics[angle=0,
 width=0.8\textwidth]{resid_polynomials}
 \caption{Residuals of the fitted linear, quadratic, cubic and logarithmic model
 \label{fig:resid_polynomials}}
 \end{figure}
-Unfortunately the four residual plots for the polynomial models are evidently not indicating a good stationary noise sequence, as the series wanders up and down for quite some periods (see figure~\ref{fig:resid_polynomials}). Time-independent expectation and variance are basic properties of stationary processes \cite[p.~49]{bd02}. This is not the case here, as we can see large covariances and residuals which are evidently depending on time. However, we want to test the four estimated trends, anyhow.
+Nevertheless, even though there is evidently a highly significant polynomial trend in rent index series, that doesn't mean necessarily that its residual time series are stationary. Unfortunately that happened as we have a look at the four noise sequences in figure~\ref{fig:resid_polynomials}. The series wanders up and down for quite some periods, meaning that the basic properties of stationary processes, time-independent expectation and constant variance over time are not fullfilled here \cite[p.~49]{bd02}. \\
+This time-dependence is confirmed as well by the sample ACF and PACF. (cite bd02 zu acf pacf) figure~\ref{fig:acf_pacf_cubicmodel}, exemplified on the cubic model because it was the best-performing polynomial model  in terms of the adjusted $R^2$, indicate lot of significant auto-correlations outside the 95-percent-confidence bounds of $+/-1.96/sqrt{n}$.  These bars don't die out quickly and indicate time-dependence and non-stationarity \cite[p.~21]{bd02}. \footnote{Similarly strong auto-correlation patterns hold true for the ACF and PACF plots of our other polynomial trend models (linear, quadratic and logarithmic) which will not be shown here.}\\
 \\
 \begin{figure}[!htb]
 \centering
 \includegraphics[angle=0,
-width=0.8\textwidth]{acf_pacf_cubicmodel}
+width=0.6\textwidth]{acf_pacf_cubicmodel}
 \caption{Sample Autocorrelation and Partial autocorrelation function of the Cubic model
 \label{fig:acf_cubicmodel}}
 \end{figure}
-\subsubsection{Testing the noise sequences of the subtracted polynomial trends}
-We are going to test the estimated trends first visually, by looking on the sample autocorrelation-function (ACF) and the sample partial autocorrelation-function (PACF), second we are applying three diagnostic tests for stationarity and independence of the observations, respectively: The Ljung-Box-Test \citep{LjungBox78} for independence as well as for stationarity the Augmented Dickie-Fuller-Test \citep{adf} and the KPSS-Test \citep{kpss92}. \\
-
-From the ACF-plot and the PACF-plot (cite bd02 zu acf pacf))  in (figure~\ref{fig:acf_pacf_cubicmodel}  exemplified on the cubic model because it was the best-performing polynomial model  in terms of the adjusted $R^2$, we can see that there are a lot of significant lags outside the 95-percent-confidence bounds of $+/-1.96/sqrt{n}$.  These bars don't die out quickly and this large amount of significant sample auto-correlations $Rho_hat$ are indicating time-dependence and non-stationarity \cite[p.~21]{bd02}. \footnote{Similarly strong auto-correlation patterns hold true for the ACF and PACF plots of our other polynomial trend models (linear, quadratic and logarithmic) which will not be shown here.}\\
-Let's now have a look at the results of the three tests in figure~\ref{fig:overview_polynomial}: First the Ljung-Box test examines whether there is significant evidence for non-zero correlations at lags 1-40. Small p-values (i.e., less than 0.05) suggest that the residuals are not independent (ist das so??? überprüfen). We can see that the Ljung-Box Hypothesis $H_0$ of independence has to be rejected for all four polynomial models. In fact, that is not bad in general, since we want to avoid a white-noise-series, but given the fact of the large covariances seen in the residual plots small p-values for the Ljung-Box-Test emphasizes in these four  cases the assumption that time-independance is not guaranteed. \\
-Furthermore the Augmented Dickie-Fuller test\footnote{We should take in consideration that the Dickie-Fuller-Test is mostly for testing autoregressive series for the presence of a unit root of the autoregressive polynomial in order to decide whether or not a time series should be differenced \cite[p.~194]{bd02} ) \citep{adf}} and the Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test provide as well strong evidence against stationarity for all 4 polynomial cases. 
-\\
 
 
-\subsection{Trend elimination by differencing}
+\subsection{Method 2: Trend elimination by differencing}
 Since the fitted polynomial models didn't help to get a stationary time series we will try to eliminate the trend by differencing. We will differentiate the data at different lags (1, 2, 3 and 4) in order to generate a noise sequence and consequently get a stationary series. \cite[p.~35]{bd02}). Again we will show first the residual plots and testing them afterwards by the sample ACF and PACF as well as the Ljung-Box-, Augmented Dickie-Fuller- and the KPSS-Test.
-\subsubsection{Modelling the estimated noise sequence}
+\subsubsection{Modelling the estimated noise sequences}
+
 \begin{figure}[!htb]
 \centering
 \includegraphics[angle=0,
 width=0.8\textwidth]{resid_diff_all}
-\caption{mean-centered, differenced series (1x, 2x, 3x, 4x)
+\caption{Residuals of the differenced series (1x, 2x, 3x, 4x).
 \label{fig:resid_diff_all}}
 \end{figure}
 As we can see in the figure~\ref{fig:resid_diff_all} the first two models look already quite promising in contrast to the residual time series above by polynomial trend elimination, showing here obviously time-independent noise sequences with presumably constant expectation and variances. \\
 However, the once-differenced series shows mostly patterns of a white-noise which is not what we intend since in case of a white-noise and too much randomness prediction quality becomes rather poor (Expectation of all the predictions $X_{t+1}$, $X_{t+2}$, $X_{t+3}$ etc. would become zero in case of a mean-centered series). 
 
-\subsubsection{Testing the noise sequences of the differenced series}
+\subsubsection{Testing the noise sequences}
+We are going to test the estimated trends first visually, by looking on the sample autocorrelation-function (ACF) and the sample partial autocorrelation-function (PACF), afterwards we are applying three diagnostic tests for stationarity and independence of the observations, respectively: The Ljung-Box-Test \citep{LjungBox78} for independence as well as for stationarity the Augmented Dickie-Fuller-Test \citep{adf} and the KPSS-Test \citep{kpss92}. \\
+
 As we can see in figure~\ref{fig:diff12_acf_pacf}) the white-noise of the once-differenced series is confirmed by the sample ACF where all lags up to 40 fall within the bounds of $+/-1.96/sqrt{n}$ \cite[p.~39]{bd02}. This underlines that the once-differenced series is to versatile and contains too much randomness in order to do good predictions.\\
 \begin{figure}[!htb]
 \centering
@@ -151,7 +110,6 @@ In contrast again, the Ljung-Box-Test for the twice-differenced series rejects t
 The Augmented-Dickie-Fuller- and the KPSS-Test suggest for the once- as well as for the twice-differenced trend elimination a stationary time series. That is a very good result and we can finally conclude to stick with the twice-differentiation in order to transform our data, since the once-differenced series is characterized by too much randomness and white-noise and the triple- and quadruple-differenced series show too large covariances (time-dependence/non-stationarity). We now center our transformed data 
 by subtracting the mean so that they are prepared fit and test ARMA-models.
 
-\subsection{Cross-validating the twice-differenced series}
 
 \section{Fitting and Testing the Model} \label{Fitting and Testing the Model}
 \subsection{Order and model selection}
@@ -162,23 +120,34 @@ We now estimate coefficients for our three model candidates by the arima()-funct
 
 unit root problem?.
 
-Further evidence for an ARMA(1,2)-model as best candidate model is provided by taking into account an additional MA-term. We can see then that in an ARMA(1,3) $\hat{\theta_1}$ and $\hat{\theta_2}$ don't differ a lot from the $\hat{\theta_1}$ and $\hat{\theta_2}$ in the ARMA(1,2)-model. Furthermore $\hat{\theta_3}$ is not significant since it's close to 0 with a large standard error, indicating that the gain by adding a third $\hat{\theta}$- coefficient would be rather poor, hence, an moving average of order 2 is sufficient enough. But we have to note that $\hat{\theta_1}$ and $\hat{\theta_2}$ are rather small compared to their standard errors. $\hat{\theta_1}$ is only slightly larger than its standard deviation. $\hat{\theta_2}$ is 2.5 times larger. However, since we pointed out a unit root issue in the moving average polynomial for the MA(1)- and ARMA(1,1)- models we want to stick with the ARMA(1,2) as our best candidate model, anyhow. Our final model equation is therefore:
+Further evidence for an ARMA(1,2)-model as best candidate model is provided by taking into account an additional MA-term. We can see then that in an ARMA(1,3) $\hat{\theta_1}$ and $\hat{\theta_2}$ don't differ a lot from the $\hat{\theta_1}$ and $\hat{\theta_2}$ in the ARMA(1,2)-model. Furthermore $\hat{\theta_3}$ is not significant since it's close to 0 with a large standard error, indicating that the gain by adding a third $\hat{\theta}$- term would be rather poor and ARMA(1,3) would be an overfitted model. Hence, an moving average of order 2 is sufficient enough. But we have to note that $\hat{\theta_1}$ and $\hat{\theta_2}$ are rather small compared to their standard errors. $\hat{\theta_1}$ is only slightly larger than its standard deviation. $\hat{\theta_2}$ is 2.5 times larger. However, since we pointed out a unit root issue in the moving average polynomial for the MA(1)- and ARMA(1,1)- models we want to stick with the ARMA(1,2) as our best candidate model, anyhow. Our final ARMA(p=1,q=2)-process is therefore the following \cite[p.~83]{bd02}:
 \begin{equation}
-X_t-\hat{\phi_1}X_{t-1} = Z_t+\hat{\theta_1}X_{t-1}+\hat{\theta_2}X_{t-2}
+X_t-\phi_1X_{t-1} = Z_t+\theta_1X_{t-1}+\theta_2X_{t-2} \text{t = 1,...,n,} 
+\\where {Z_t} ~ WN(0,sigma_2) 
+\\and the polynomials (1-phi_1z) and (1+theta_1z+theta_2^2*z) have no common factors.
 \end{equation}
+\\
+and the estimated coefficients with the corresponding standard errors (in brackets) are:
+\begin{equation*}
+\hat{\phi_1} = 0.7974 \text (0.2055)
+\end{equation*}
+\begin{equation*}
+\hat{\theta_1} = 0.3092 \text (0.2528)
+\end{equation*}
+\begin{equation*}
+\hat{\theta_2} = -0.6685 \text (0.2583)
+\end{equation*}
+\begin{equation*}
+\hat{\sigma^2} = 0.1793
+\end{equation*}
 
-
-\subsection{Model evidence by simulation: Comparing the sample ACF/PACF and the model ACF/PACF}
-Further evidence for an MA(1) model is provided by simulating several models (n=10000) with our estimated coefficients. We can see than that the simulated model ACF and PACF of the MA(1) suits our sample ACF and PACF best. The one big spike at lag1 in the sample ACF is very well modellized. However, the PACF is decreasing too slowly, indicating that the estimated $\theta_1$ with a value of 0.99 has probably been overestimated. A root of the moving-average polynomial close to the unit circle indicates that the data were probably overdifferenced \citep[p.~193]{bd02}. The ARMA(1,1) and ARMA(1,2) simulations are not representating our sample ACF and PACF that well.
-
-
-\subsection{Diagnostics of the models}
+\subsection{Diagnostics of the model}
 To check the validity of our candidate model we apply as well the following diagnostics: First, we plot the rescaled residuals and verify that there is not some obvious dependence, trend or else. We should see a white-noise if the model is valid. Second, we have a look at the ACF of the rescaled residuals. Since we are supposed to have a white-noise approximately 95percent of the sample-autocorrelations rhohhat should be inside the bounds $+/-1.96/sqrt{n}$. Third we use the Ljung-Box Test \citep{LjungBox78} to validate that the residuals can be considered as a white-noise by showing p-values for all possible lags (cite page 5 Lecture notes 11). \\
 \begin{figure}[!htb]
 \centering
 \includegraphics[angle=0,
-width=1\textwidth]{tsdiag_arma_1_2}
-\caption{standardized residuals, auto-correlation function and p-values of the Ljung-Box-Test for the fitted ARMA(1,2)-model
+height=0.73\textwidth]{tsdiag_arma_1_2}
+\caption{ARMA(1,2)-Model: Standardized Residuals, Auto-correlation function of the Residuals and the p-values for the Ljung-Box-Test at each lag
 \label{fig:tsdiag_arma_1_2}}
 \end{figure}
 We are visualizing these diagnostics by using the tsdiag() function from the “stats” R-Package (cite R Core Team). The following figure~\ref{fig:tsdiag_arma_1_2} shows these three diagnostics for each of our model the ARMA(1,2). We can see that the standardized residuals are supposed to be white-noise in all three cases. In addition, from the ACF of the rescaled residuals we can see that not a single bar (out of 20) lies outside the bounds bounds $+/-1.96/sqrt{n}$. And from the Ljung-Box-Tests we can see that the p-value is larger than 5 percent for each lag for each model, meaning that we cannot reject the Hypothesis H0 that these residuals are a white-noise. So the residuals for all three models seem to be indeed a white-noise, therefore all three models would be valid (good ACF, large p-values on Ljung-Box-Tests) and could be used for forecasting. \\
@@ -198,9 +167,8 @@ width=0.5\textwidth]{pred_transformed_series}
 \label{fig:pred_transformed_series}}
 \end{figure}
 
-
 From figure~\ref{fig:pred_transformed_series} we can see the prediction of a process of adaptation to the zero-mean for the next few quarters. This is in fact nothing surprising for a mean-centered stationary time series and the smooth positive adaptation process seems to be a reasonable forecast with quite some prediction quality in comparison to a white-noise which would predict directly a zero for the tplus1 observation. 
-Likewise the quite large 95-percent confidence bands are not that surprising in a strongly differenced series as we have here. Differenced series like that can contain quite some randomness and result by consequence in large amplitudes as we can see. Footnote: note that the indication of confidence bands is weakly justified here since the series’ residuals are successfully tested for normal distribution: the Shapiro-Wilk Test showed a p-value of 0.07, meaning that the hypothesis H0 of normal distribution can knapp not be rejected (cite shapiro wilk). However, a qq-plot showed patterns of normal distribution for the close-to-mean observations but slightly heavier tails compared to a true normal distribution. Therefore interpretations of confidence bands are to be handled with care, end footnote.
+Likewise the quite large 95-percent confidence bands are not that surprising in a strongly differenced series as we have here. Differenced series like that can contain quite some randomness and result by consequence in large amplitudes as we can very well see.\footnote{The indication of confidence bands is weakly justified here since the series’ residuals are successfully tested for normal distribution by the Shapiro-Wilk-Normality Test . showed a p-value of 0.07, meaning that the hypothesis H0 of normal distribution can slightly not be rejected \citep{shapiro}. However, a quantile-quantile-plot showed patterns of normal distribution for the close-to-mean observations but slightly heavier tails compared to a true normal distribution. Therefore interpretations of confidence bands are to be handled with care.}
 However, it would be quite desirable to reduce the variance and by consequence  the confidence bands by increasing drastically the number of observations.
 
 
@@ -227,5 +195,36 @@ Last but not least, furthermore improving work could be done during the transfor
 
 \bibliography{bibliography}
 \bibliographystyle{apa}
-\end{document} 
 
+\pagebreak
+
+\appendix
+\section{Tables}
+\begin{figure}[!ht]
+\centering
+\includegraphics[angle=0,
+width=0.7\textwidth]{summary_cubicmodel}
+\caption{summary statistics of the fitted cubic model\label{fig:summary_cubicmodel}}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[angle=0,
+width=0.7\textwidth]{summary_seasonmodel}
+\caption{summary statistics of the fitted seasonal model\label{fig:summary_seasonmodel}}
+\end{figure}
+
+\section{Cross-validation of the twice-differenced series}
+Cross-validation with a test data set considering only the last 35 of the 100 observations (see figure~\ref{fig:diff2_testset} above) confirms furthermore the non-stationary character of the twice-differenced-model 
+Box.test(d2.indiceloyers.test, lag=2, type="Ljung-Box") p-value of 0.033 suggests the data are (time-)independent
+adf.test(d2.indiceloyers.test, alternative = "stationary", k=2)  H0 of non-stationarity cannot be rejected which is not a problem, that could be due to lack of observations
+kpss.test(d2.indiceloyers.test)  with a p-value>0.05 the test data seems to be stationary aswell
+the data of the first period (1993 to 2009) twice-differenced series show independent observations as well (see figure~\ref{fig:diff2_test_train}), however we can see a slightly slower increase in the segment from 2009 to 2018 indicating that in the years from 1993 to 2009 the growth in rental prices was higher than in the years in the second's segment which begins from 2009. that can be explained by the big baisse in the early 90ies, starting from a lower initial point and better conjunctural perspectives the increase was stronger, whilst from 2009 on the growth in rental prices slowed down, which can be very well explained by the US subprime crises beginning in the year 2008 followed by a long-taking global recession.
+\begin{figure}[!htb]
+\centering
+\includegraphics[angle=0,
+width=0.8\textwidth]{diff2_test_train}
+\caption{mean-centered twice-differenced series, periods from 1993 to 2009 and 2009 to 2018
+\label{fig:diff2_test_train}}
+\end{figure}
+\end{document} 
