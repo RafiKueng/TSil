@@ -30,6 +30,25 @@
 
 \usepackage{fullpage}
 
+% hyperref creates links in a pdf, and lets you set pdf options
+\usepackage[
+    pdfpagelabels,
+    plainpages=false,
+    pdfauthor={Faralli Zully, Spörri Marc},
+    pdftitle={Analysis and forecasting of the Swiss Rent Index 1993 to 2018},
+    pdfproducer={},
+    pdfcreator={LaTeX2e (pdfLaTeX+Biber/Biblatex on Kile/TexLive/Debian9 and TeXnicCenter/MiKTeX2.9/Windows10)},
+    pdfsubject={Analysis and forecasting of the Swiss Rent Index 1993 to 2018},
+    pdfkeywords={swiss rent index}
+]{hyperref}   % Hyperlinks
+
+% clever refs lets you write \cref{x} instead of \cref{x}
+\usepackage[
+    %capitalise,   % cap the fig, table... refs
+    noabbrev,     % use Figure instead of fig.
+    nameinlink    % make the whole thing clickable
+]{cleveref}
+
 
 % Settings
 % ------------------------------------------------------------------------
@@ -98,10 +117,10 @@ The time series' first observation (2nd quarter of the year 1993) will be the re
 \section{Data Analysis}
 
 The first step in any analysis of a time series is to plot the data in order to identify discontinuities or a sudden change of level in the series\cite[p.~23]{bd02}.
-As we can see from figure~\ref{fig:indiceloyers_timeseries} there seems to be a clear positive monotonic trend in the time series of the Swiss rent index.
+As we can see from \cref{fig:indiceloyers_timeseries} there seems to be a clear positive monotonic trend in the time series of the Swiss rent index.
 However, the increase seems to be higher in the 1990ies.
 It may be advisable to analyse the series by breaking it into two segments \cite[p.~23]{bd02}.
-For that purpose we have a look at the segmented plots 1993 to 2009 and 2009 to 2018 (see figure~\ref{fig:indiceloyers_test_train}).
+For that purpose we have a look at the segmented plots 1993 to 2009 and 2009 to 2018 (see \cref{fig:indiceloyers_test_train}).
 
 We can see a slightly slower increase in the period from 2009 to 2018 indicating that during the years 1993 to 2009 the growth in rents was faster than in the years after the year 2009.
 This fact can be well explained by the big real estate depression in the early 90ies in Switzerland, therefore the time series starting at 1993 is consequently starting from a relatively low initial level and, given the low initial level and the better conjunctural perspectives, the growth  was faster during the 1990ies (irgendwas zitieren 90er jahre depression), whereas from the year 2009 on the growth in rents slowed down, which can be very well explained by the US subprime crises triggered in the year 2008 and followed by a long-lasting global recession (zitiere irgendwas).
@@ -149,11 +168,11 @@ Once we have found a good way to transform our data into a stationary series we 
 Since the time series \ref{fig:indiceloyers_timeseries} indicates a probable polynomial trend, especially a linear one, we are starting by fitting different polynomial trends by ordinary least squares estimation \cite[p.~11]{htf09}.
 
 We are now modelling a noise sequence (residual time series) by estimating and subtracting a linear, a quadratic, a cubic as well as a logarithmic trend.
-The latter  helps to transform a potentially exponential increase in the rent index into a linear trend, even though at first glance the time series figure~\ref{fig:indiceloyers_timeseries} looks more like a linear than an exponential trend, we are going to test for a logarithmic trend either.
+The latter  helps to transform a potentially exponential increase in the rent index into a linear trend, even though at first glance the time series \cref{fig:indiceloyers_timeseries} looks more like a linear than an exponential trend, we are going to test for a logarithmic trend either.
 
 The regression models by ordinary least squares estimation \cite[p.~11]{htf09} showed highly significant trend coefficients for all for polynomial models and no significant seasonal effects\footnote{Since the data are collected quarterly we used a linear regression model with d=4 dummy predictors to check for significant seasonal coefficients, meaning a dummy for every quarter}.
 
-So all of the polynomial models would explain our data extremely well, which is indeed not surprising given the fact that the trend is consistently positive monotonic and therefore highly consistent with other positively monotonic models as our 4 polynomial trend models are (further details on the estimated trend and seasonal coefficients as well as their significance can be found in figure~\ref{fig:summary_cubicmodel} in the tables appendix).\footnote{
+So all of the polynomial models would explain our data extremely well, which is indeed not surprising given the fact that the trend is consistently positive monotonic and therefore highly consistent with other positively monotonic models as our 4 polynomial trend models are (further details on the estimated trend and seasonal coefficients as well as their significance can be found in \cref{fig:summary_cubicmodel} in the tables appendix).\footnote{
     Interpretation of p-values of regression model coefficients are to be handled with care in the case of time series since these models are assuming independence of the observations which hardly never holds true in a time series except white-noise.
     One has to keep in mind that in case of time series we don't want to draw inference on the regression coefficients, our purpose for the regression coefficients is a different one: by looking at their p-value we get an idea whether or not there is a polynomial trend to eliminate in order to get a stationary time series
 }
@@ -166,11 +185,11 @@ So all of the polynomial models would explain our data extremely well, which is 
 \end{figure}
 
 Nevertheless, even though there is evidently a highly significant polynomial trend in rent index series, that doesn't mean necessarily that its residual time series are stationary.
-Unfortunately that happened as we have a look at the four noise sequences in figure~\ref{fig:resid_polynomials}.
+Unfortunately that happened as we have a look at the four noise sequences in \cref{fig:resid_polynomials}.
 The series wanders up and down for quite some periods, meaning that the basic properties of stationary processes, time-independent expectation and constant variance over time are not fullfilled here \cite[p.~49]{bd02}.
 
 This time-dependence is confirmed as well by the sample ACF and PACF.
-(cite bd02 zu acf pacf) figure~\ref{fig:acf_pacf_cubicmodel}, exemplified on the cubic model because it was the best-performing polynomial model in terms of the adjusted $R^2$, indicate lot of significant auto-correlations outside the 95-percent-confidence bounds of $+/-1.96/sqrt{n}$.
+(cite bd02 zu acf pacf) \cref{fig:acf_pacf_cubicmodel}, exemplified on the cubic model because it was the best-performing polynomial model in terms of the adjusted $R^2$, indicate lot of significant auto-correlations outside the 95-percent-confidence bounds of $+/-1.96/sqrt{n}$.
 These bars don't die out quickly and indicate time-dependence and non-stationarity \cite[p.~21]{bd02}.\footnote{
     Similarly strong auto-correlation patterns hold true for the ACF and PACF plots of our other polynomial trend models (linear, quadratic and logarithmic) which will not be shown here.
 }
@@ -200,7 +219,7 @@ Again we will show first the residual plots and testing them afterwards by the s
     \label{fig:resid_diff_all}
 \end{figure}
 
-As we can see in the figure~\ref{fig:resid_diff_all} the first two models look already quite promising in contrast to the residual time series above by polynomial trend elimination, showing here obviously time-independent noise sequences with presumably constant expectation and variances.
+As we can see in the \cref{fig:resid_diff_all} the first two models look already quite promising in contrast to the residual time series above by polynomial trend elimination, showing here obviously time-independent noise sequences with presumably constant expectation and variances.
 
 However, the once-differenced series shows mostly patterns of a white-noise which is not what we intend since in case of a white-noise and too much randomness prediction quality becomes rather poor (Expectation of all the predictions $X_{t+1}$, $X_{t+2}$, $X_{t+3}$ etc. would become zero in case of a mean-centered series).
 
@@ -210,7 +229,7 @@ However, the once-differenced series shows mostly patterns of a white-noise whic
 We are going to test the estimated trends first visually, by looking on the sample autocorrelation-function (ACF) and the sample partial autocorrelation-function (PACF), afterwards we are applying three diagnostic tests for stationarity and independence of the observations, respectively:
 The Ljung-Box-Test \citep{LjungBox78} for independence as well as for stationarity the Augmented Dickie-Fuller-Test \citep{adf} and the KPSS-Test \citep{kpss92}.
 
-As we can see in figure~\ref{fig:diff12_acf_pacf}) the white-noise of the once-differenced series is confirmed by the sample ACF where all lags up to 40 fall within the bounds of $+/-1.96/sqrt{n}$ \cite[p.~39]{bd02}.
+As we can see in \cref{fig:diff12_acf_pacf}) the white-noise of the once-differenced series is confirmed by the sample ACF where all lags up to 40 fall within the bounds of $+/-1.96/sqrt{n}$ \cite[p.~39]{bd02}.
 This underlines that the once-differenced series is to versatile and contains too much randomness in order to do good predictions.
 
 \begin{figure}
@@ -227,7 +246,7 @@ This is a good sign, meaning that on one hand we have at least correlation at la
     These plots will not be shown here.
 }
 
-From the tests overview in figure~\ref{fig:overview_diffs} we can see for the once-differenced series a p-value of 0.35 for the Ljung-Box-Test.
+From the tests overview in \cref{fig:overview_diffs} we can see for the once-differenced series a p-value of 0.35 for the Ljung-Box-Test.
 That was to be expected, meaning that we cannot reject the Hypothesis $H_0$ that there is independence between the observations \citep{LjungBox78} and therefore confirming the white-noise structure in the once-differenced series.
 
 In contrast again, the Ljung-Box-Test for the twice-differenced series rejects the $H_0$ of independence which is a pleasant result giving us the sureness that there is no white-noise in the twice-differenced series.
@@ -244,12 +263,12 @@ We now center our transformed data by subtracting the mean so that they are prep
 
 \subsection{Order and model selection}
 
-From the sample ACF and PACF (figure~\ref{fig:diff12_acf_pacf}) of our twice-differenced series we can see from the ACF-plot a highly significant spike at the first auto-correlation $\hat{Rho_1}$ and the following bars dying out quickly and lying inside the 95percent-confidence – bounds.
+From the sample ACF and PACF (\cref{fig:diff12_acf_pacf}) of our twice-differenced series we can see from the ACF-plot a highly significant spike at the first auto-correlation $\hat{Rho_1}$ and the following bars dying out quickly and lying inside the 95percent-confidence – bounds.
 The combined view of the PACF-plot with its exponentially decreasing patterns (in absolute values) and the 1 spike in the ACF-plot let us suggest an MA(1)-model could fit our data quite well.
 However, since we are operating with only 100 observations, one can not exclude that there could be underlying exponentially decreasing patterns in the ACF plot as well.
 Is this the cse, then exponential decrease (in absolute values) in both ACF and PACF plot would rather suggest an ARMA-model.
 Since  we’re are not sure about, we follow a conservative approach and are going to test for MA(1) as well as for ARMA-model(s).
-The following matrix (figure~\ref{fig:aicc_matrix}) shows the AICC\footnote{
+The following matrix (\cref{fig:aicc_matrix}) shows the AICC\footnote{
     The lower the AICC-value the better the model's performance \citep{aic86}.
 } for different orders of p and q\footnote{
     p indicates the order of the auto-regressive part and q the order of the moving-average part.
@@ -322,7 +341,7 @@ Third we use the Ljung-Box Test \citep{LjungBox78} to validate that the residual
 \end{figure}
 
 We are visualizing these diagnostics by using the tsdiag() function from the ``stats'' R-Package \TODO{cite R Core Team}.
-The following figure~\ref{fig:tsdiag_arma_1_2} shows these three diagnostics for each of our model the ARMA(1,2).
+The following \cref{fig:tsdiag_arma_1_2} shows these three diagnostics for each of our model the ARMA(1,2).
 We can see that the standardized residuals are supposed to be white-noise in all three cases.
 In addition, from the ACF of the rescaled residuals we can see that not a single bar (out of 20) lies outside the bounds bounds $\pm 1.96 / \sqrt{n}$.
 And from the Ljung-Box-Tests we can see that the p-value is larger than 5 percent for each lag for each model, meaning that we cannot reject the Hypothesis H0 that these residuals are a white-noise.
@@ -348,7 +367,7 @@ In addition, we will give 95 percent confidence bands in case of normally distri
     \label{fig:pred_transformed_series}
 \end{figure}
 
-From figure~\ref{fig:pred_transformed_series} we can see the prediction of a process of adaptation to the zero-mean for the next few quarters.
+From \cref{fig:pred_transformed_series} we can see the prediction of a process of adaptation to the zero-mean for the next few quarters.
 This is in fact nothing surprising for a mean-centered stationary time series and the smooth positive adaptation process seems to be a reasonable forecast with quite some prediction quality in comparison to a white-noise which would predict directly a zero for the tplus1 observation.
 Likewise the quite large 95-percent confidence bands are not that surprising in a strongly differenced series as we have here.
 Differenced series like that can contain quite some randomness and result by consequence in large amplitudes as we can very well see.\footnote{
@@ -443,11 +462,11 @@ One possibility could be, for instance, to try first to logarithmize the stronge
 
 \section{Cross-validation of the twice-differenced series}
 
-Cross-validation with a test data set considering only the last 35 of the 100 observations (see figure~\ref{fig:diff2_testset} above) confirms furthermore the non-stationary character of the twice-differenced-model 
+Cross-validation with a test data set considering only the last 35 of the 100 observations (see \cref{fig:diff2_testset} above) confirms furthermore the non-stationary character of the twice-differenced-model 
 Box.test(d2.indiceloyers.test, lag=2, type="Ljung-Box") p-value of 0.033 suggests the data are (time-)independent
 adf.test(d2.indiceloyers.test, alternative = "stationary", k=2)  H0 of non-stationarity cannot be rejected which is not a problem, that could be due to lack of observations
 kpss.test(d2.indiceloyers.test)  with a p-value>0.05 the test data seems to be stationary aswell
-the data of the first period (1993 to 2009) twice-differenced series show independent observations as well (see figure~\ref{fig:diff2_test_train}), however we can see a slightly slower increase in the segment from 2009 to 2018 indicating that in the years from 1993 to 2009 the growth in rental prices was higher than in the years in the second's segment which begins from 2009. that can be explained by the big baisse in the early 90ies, starting from a lower initial point and better conjunctural perspectives the increase was stronger, whilst from 2009 on the growth in rental prices slowed down, which can be very well explained by the US subprime crises beginning in the year 2008 followed by a long-taking global recession.
+the data of the first period (1993 to 2009) twice-differenced series show independent observations as well (see \cref{fig:diff2_test_train}), however we can see a slightly slower increase in the segment from 2009 to 2018 indicating that in the years from 1993 to 2009 the growth in rental prices was higher than in the years in the second's segment which begins from 2009. that can be explained by the big baisse in the early 90ies, starting from a lower initial point and better conjunctural perspectives the increase was stronger, whilst from 2009 on the growth in rental prices slowed down, which can be very well explained by the US subprime crises beginning in the year 2008 followed by a long-taking global recession.
 
 \begin{figure}
     \centering
