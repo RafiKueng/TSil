@@ -11,12 +11,22 @@
 % Setup packages
 % ------------------------------------------------------------------------
 
+% set margins ect of page
+\usepackage[
+    a4paper,
+    top=1in,
+    bottom=1in,
+    left=1in,
+    right=1in
+]{geometry}
+% \usepackage{fullpage}  % don't use fullpage, use the more advanced geometry package
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} 
 
 \usepackage[english]{babel}  % language settings
 \usepackage{lmodern}         % font to use
-\usepackage{chngcntr}
+\usepackage{chngcntr}        % to be able to change figure counters
 
 \usepackage{graphicx}        % use modern graphics formats
 
@@ -28,7 +38,6 @@
 
 \usepackage{xcolor}          % use color names
 
-\usepackage{fullpage}
 
 % hyperref creates links in a pdf, and lets you set pdf options
 \usepackage[
@@ -42,7 +51,7 @@
     pdfkeywords={swiss rent index}
 ]{hyperref}   % Hyperlinks
 
-% clever refs lets you write \cref{x} instead of \cref{x}
+% clever refs lets you write just \cref{x} instead of figure~\ref{x}, section~\ref{y} ect..
 \usepackage[
     %capitalise,   % cap the fig, table... refs
     noabbrev,     % use Figure instead of fig.
@@ -53,7 +62,7 @@
 % Settings
 % ------------------------------------------------------------------------
 
-\counterwithin{figure}{section}
+\counterwithin{figure}{section}  % include section number in figure numbering
 \bibliographystyle{apa}      % bibliography style to use
 \graphicspath{{graphics/}}   % all graphics are in the graphics folder.
                              % by default, search there!
@@ -265,14 +274,15 @@ We now center our transformed data by subtracting the mean so that they are prep
 
 \subsection{Order and model selection}
 
-From the sample ACF and PACF (\cref{fig:diff12_acf_pacf}) of our twice-differenced series we can see from the ACF-plot a highly significant spike at the first auto-correlation $\hat{Rho_1}$ and the following bars dying out quickly and lying inside the 95percent-confidence – bounds.
+From the sample ACF and PACF (\cref{fig:diff12_acf_pacf}) of our twice-differenced series we can see from the ACF-plot a highly significant spike at the first auto-correlation $\hat{\rho_1}$ and the following bars dying out quickly and lying inside the 95percent-confidence – bounds.
 The combined view of the PACF-plot with its exponentially decreasing patterns (in absolute values) and the 1 spike in the ACF-plot let us suggest an MA(1)-model could fit our data quite well.
 However, since we are operating with only 100 observations, one can not exclude that there could be underlying exponentially decreasing patterns in the ACF plot as well.
 Is this the cse, then exponential decrease (in absolute values) in both ACF and PACF plot would rather suggest an ARMA-model.
 Since  we’re are not sure about, we follow a conservative approach and are going to test for MA(1) as well as for ARMA-model(s).
 The following matrix (\cref{fig:aicc_matrix}) shows the AICC\footnote{
     The lower the AICC-value the better the model's performance \citep{aic86}.
-} for different orders of p and q\footnote{
+}
+for different orders of p and q\footnote{
     p indicates the order of the auto-regressive part and q the order of the moving-average part.
     Its coefficient are generally noted as $phi$ (AR-part) and $theta$ (MA-part).
 }.
@@ -315,12 +325,22 @@ Our final ARMA(p=1,q=2)-process is therefore the following \cite[p.~83]{bd02}:
 
 and the estimated coefficients with the corresponding standard errors (in brackets) are:
 
+% Hier mal 2 variante: kompakt und lang
+%
+% Version kompakt
 \begin{align*}
-    \hat{\phi_1}   &= \num{ 0.7974 \pm 0.2055} \\
-    \hat{\theta_1} &= \num{ 0.3092 \pm 0.2528} \\
-    \hat{\theta_2} &= \num{-0.6685 \pm 0.2583} \\
-    \hat{\sigma^2} &= \num{ 0.1793 }
+    \hat{\phi}_1    &= \num{ 0.7974 \pm 0.2055}  &  \hat{\theta}_1  &= \num{ 0.3092 \pm 0.2528} \\
+    \hat{\theta}_2  &= \num{-0.6685 \pm 0.2583}  &  \hat{\sigma}^2  &= \num{ 0.1793 }
 \end{align*}
+
+% % Alles in einer spalte
+% \begin{align*}
+%     \hat{\phi}_1    &= \num{ 0.7974 \pm 0.2055} \\
+%     \hat{\theta}_1  &= \num{ 0.3092 \pm 0.2528} \\
+%     \hat{\theta}_2  &= \num{-0.6685 \pm 0.2583} \\
+%     \hat{\sigma}^2} &= \num{ 0.1793 }
+% \end{align*}
+
 
 \TODO{check oeb die darstellig so gwuenscht isch.. mathematisch waers korrekt so..}
 
