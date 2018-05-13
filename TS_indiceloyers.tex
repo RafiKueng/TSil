@@ -69,8 +69,8 @@
 
 % note \TODO{} in teh sourcecode to get reminded later that you still have work todo
 \newcommand{\TODO}[1]{%
-    \textcolor{red}{%
-        \textbf{!!! TODO: #1}%
+    \textcolor{red}{ %
+        \textbf{[ !!!TODO: #1 ]}%
     }%
     \PackageWarning{TODO:}{TODO: #1}%
 }
@@ -108,7 +108,7 @@ The data is provided by the Swiss Federal Statistical Office, implying 100 quart
 The rent index measures the inflation of the rented dwellings in Switzerland.
 It is the most significant partial index of the Swiss consumer’s price index, representing a weighted share of 13 percent of this index.
 
-The data are collected quarterly, based upon a stratified random survey sampling of around 10'000 lessors.
+The data are collected quarterly, based upon a stratified random survey sampling of around \num{10000} lessors.
 The time series' first observation (2nd quarter of the year 1993) will be the reference value which is set to a base index of 100 and represents the weighted average rent at this time in Switzerland (OFS, 2016: p. 20-23).
 
 
@@ -123,9 +123,9 @@ It may be advisable to analyse the series by breaking it into two segments \cite
 For that purpose we have a look at the segmented plots 1993 to 2009 and 2009 to 2018 (see \cref{fig:indiceloyers_test_train}).
 
 We can see a slightly slower increase in the period from 2009 to 2018 indicating that during the years 1993 to 2009 the growth in rents was faster than in the years after the year 2009.
-This fact can be well explained by the big real estate depression in the early 90ies in Switzerland, therefore the time series starting at 1993 is consequently starting from a relatively low initial level and, given the low initial level and the better conjunctural perspectives, the growth  was faster during the 1990ies (irgendwas zitieren 90er jahre depression), whereas from the year 2009 on the growth in rents slowed down, which can be very well explained by the US subprime crises triggered in the year 2008 and followed by a long-lasting global recession (zitiere irgendwas).
+This fact can be well explained by the big real estate depression in the early 90ies in Switzerland, therefore the time series starting at 1993 is consequently starting from a relatively low initial level and, given the low initial level and the better conjunctural perspectives, the growth  was faster during the 1990ies (irgendwas zitieren 90er jahre depression), whereas from the year 2009 on the growth in rents slowed down, which can be very well explained by the US subprime crises triggered in the year 2008 and followed by a long-lasting global recession \TODO{(zitiere irgendwas)}.
 
-However, they are apparently no outliers, sudden changes or major discontinuities and there is evidently no reason to do further data adjustments or variance-stabilizing transformations like Box-Cox-transformations, for instance {boxcox64}.
+However, they are apparently no outliers, sudden changes or major discontinuities and there is evidently no reason to do further data adjustments or variance-stabilizing transformations like Box-Cox-transformations, for instance {boxcox64}. \TODO{sett hier a ref haere oder wieso isch das boxcox64 in gklammere?}
 Therefore we start our work in the next section by transforming our data into a stationary time series \cite[p.~45--82]{bd02}.
 
 
@@ -146,18 +146,18 @@ Afterwards we check our fitted models first for stationarity by tests like the A
 Furthermore we test the estimated noise sequences by examining some simple tests whether or not the obtained residuals are values of independent and identically distributed random variables (as mentioned above: that should not necessarily occur, otherwise we would be confronted with too much randomness in our stationary series and our prediction work would be simply done by estimating mean of the white-noise, which is zero for all predictions $X_{t+1}$, $X_{t+2}$, $X_{t+3}$ etc. in case of a mean-centered stationary series).
 
 In a final step we check them visually by plotting the autocorrelation-function as well as the partial auto-correlation in order to get sure that we are not modelling a white noise sequence on the one hand, and to get an idea of the orders of p and q, respectively for a possible ARMA(p,q)-model, on the other hand \cite[pp.~83--110]{bd02}.
-Once we have found a good way to transform our data into a stationary series we will fitting and testing a set of candidate models for our transformed data in section~\ref{sec:FitTestModel}.
+Once we have found a good way to transform our data into a stationary series we will fitting and testing a set of candidate models for our transformed data in \cref{sec:FitTestModel}.
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.7\textwidth]{indiceloyers_timeseries}
+    \includegraphics[width=0.7\textwidth]{indiceloyers_timeseries}
     \caption{Swiss rent index, years 1993 to 2018}
     \label{fig:indiceloyers_timeseries}
 \end{figure}
  
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.8\textwidth]{indiceloyers_test_train}
+    \includegraphics[width=0.8\textwidth]{indiceloyers_test_train}
     \caption{Swiss Rent index, periods from 1993 to 2009 and from 2009 to 2018}
     \label{fig:indiceloyers_test_train}
 \end{figure}
@@ -170,7 +170,9 @@ Since the time series \ref{fig:indiceloyers_timeseries} indicates a probable pol
 We are now modelling a noise sequence (residual time series) by estimating and subtracting a linear, a quadratic, a cubic as well as a logarithmic trend.
 The latter  helps to transform a potentially exponential increase in the rent index into a linear trend, even though at first glance the time series \cref{fig:indiceloyers_timeseries} looks more like a linear than an exponential trend, we are going to test for a logarithmic trend either.
 
-The regression models by ordinary least squares estimation \cite[p.~11]{htf09} showed highly significant trend coefficients for all for polynomial models and no significant seasonal effects\footnote{Since the data are collected quarterly we used a linear regression model with d=4 dummy predictors to check for significant seasonal coefficients, meaning a dummy for every quarter}.
+The regression models by ordinary least squares estimation \cite[p.~11]{htf09} showed highly significant trend coefficients for all for polynomial models and no significant seasonal effects.\footnote{
+    Since the data are collected quarterly we used a linear regression model with d=4 dummy predictors to check for significant seasonal coefficients, meaning a dummy for every quarter.
+}
 
 So all of the polynomial models would explain our data extremely well, which is indeed not surprising given the fact that the trend is consistently positive monotonic and therefore highly consistent with other positively monotonic models as our 4 polynomial trend models are (further details on the estimated trend and seasonal coefficients as well as their significance can be found in \cref{fig:summary_cubicmodel} in the tables appendix).\footnote{
     Interpretation of p-values of regression model coefficients are to be handled with care in the case of time series since these models are assuming independence of the observations which hardly never holds true in a time series except white-noise.
@@ -179,7 +181,7 @@ So all of the polynomial models would explain our data extremely well, which is 
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.8\textwidth]{resid_polynomials}
+    \includegraphics[width=0.8\textwidth]{resid_polynomials}
     \caption{Residuals of the fitted linear, quadratic, cubic and logarithmic model}
     \label{fig:resid_polynomials}
 \end{figure}
@@ -197,7 +199,7 @@ These bars don't die out quickly and indicate time-dependence and non-stationari
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.6\textwidth]{acf_pacf_cubicmodel}
+    \includegraphics[width=0.6\textwidth]{acf_pacf_cubicmodel}
     \caption{Sample Autocorrelation and Partial autocorrelation function of the Cubic model}
     \label{fig:acf_cubicmodel}
 \end{figure}
@@ -214,7 +216,7 @@ Again we will show first the residual plots and testing them afterwards by the s
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.8\textwidth]{resid_diff_all}
+    \includegraphics[width=0.8\textwidth]{resid_diff_all}
     \caption{Residuals of the differenced series (1x, 2x, 3x, 4x).}
     \label{fig:resid_diff_all}
 \end{figure}
@@ -234,15 +236,15 @@ This underlines that the once-differenced series is to versatile and contains to
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=1\textwidth]{diff12_acf_pacf}
+    \includegraphics[width=1\textwidth]{diff12_acf_pacf}
     \caption{sample auto-correlation and partial auto-correlation function of the once- and twice-differenced series}
     \label{fig:diff12_acf_pacf}
 \end{figure}
 
-In contrast, the sample ACF of the twice-differenced model doesn't indicate a white-noise: there is at least a highly significant correlation at lag 1 and the following three lags are touching the $+/-1.96sqrt/{n}$ - 95percent-confidence-bounds, followed by no more significant bars which die out quickly.
+In contrast, the sample ACF of the twice-differenced model doesn't indicate a white-noise: there is at least a highly significant correlation at lag 1 and the following three lags are touching the $\pm 1.96 / \sqrt{n}$ - 95percent-confidence-bounds, followed by no more significant bars which die out quickly.
 This is a good sign, meaning that on one hand we have at least correlation at lag 1 which is needed to do prediction, on the other hand the covariances seem obviously not too large to be considered time-dependant and therefore we can assume a stationary series here.\footnote{
     Triple- and quadruple-differencing is not appropriate neither.
-    Whereas once-differencing is a white-noise, the sample ACF and PACF of the triple- and quadruple-differencing showed significant bars periodically appearing outside the $+/-1.96/sqrt{n}$ - bounds which doesn't allow reliable modelling.
+    Whereas once-differencing is a white-noise, the sample ACF and PACF of the triple- and quadruple-differencing showed significant bars periodically appearing outside the $\pm 1.96 / \sqrt{n}$ - bounds which doesn't allow reliable modelling.
     These plots will not be shown here.
 }
 
@@ -291,20 +293,20 @@ We now estimate coefficients for our three model candidates by the arima()-funct
 \TODO{unit root problem?}
 
 Further evidence for an ARMA(1,2)-model as best candidate model is provided by taking into account an additional MA-term.
-We can see then that in an ARMA(1,3) $\hat{\theta_1}$ and $\hat{\theta_2}$ don't differ a lot from the $\hat{\theta_1}$ and $\hat{\theta_2}$ in the ARMA(1,2)-model.
-Furthermore $\hat{\theta_3}$ is not significant since it's close to 0 with a large standard error, indicating that the gain by adding a third $\hat{\theta}$- term would be rather poor and ARMA(1,3) would be an overfitted model.
+We can see then that in an ARMA(1,3) $\hat{\theta}_1$ and $\hat{\theta}_2$ don't differ a lot from the $\hat{\theta}_1$ and $\hat{\theta}_2$ in the ARMA(1,2)-model.
+Furthermore $\hat{\theta}_3$ is not significant since it's close to 0 with a large standard error, indicating that the gain by adding a third $\hat{\theta}$- term would be rather poor and ARMA(1,3) would be an overfitted model.
 Hence, an moving average of order 2 is sufficient enough.
-But we have to note that $\hat{\theta_1}$ and $\hat{\theta_2}$ are rather small compared to their standard errors.
-$\hat{\theta_1}$ is only slightly larger than its standard deviation.
-$\hat{\theta_2}$ is 2.5 times larger.
+But we have to note that $\hat{\theta}_1$ and $\hat{\theta}_2$ are rather small compared to their standard errors.
+$\hat{\theta}_1$ is only slightly larger than its standard deviation.
+$\hat{\theta}_2$ is 2.5 times larger.
 However, since we pointed out a unit root issue in the moving average polynomial for the MA(1)- and ARMA(1,1)- models we want to stick with the ARMA(1,2) as our best candidate model, anyhow.
 Our final ARMA(p=1,q=2)-process is therefore the following \cite[p.~83]{bd02}:
 
 \begin{align*}
-    X_t - \phi_1 X_{t-1} =& Z_t + \theta_1 X_{t-1} + \theta_2 X_{t-2}\\
+    X_t - \phi_1 X_{t-1} &= Z_t + \theta_1 X_{t-1} + \theta_2 X_{t-2}\\
     &\text{with $t = 1,\dots,n$} \\
     &\text{where ${Z_t} \sim WN(0,\sigma_2)$} \\
-    &\text{and the polynomials $(1 - \phi_1 z)$ and $( 1 + \theta_1 z + \theta_2^2 \cdot z)$}\\
+    &\text{and the polynomials $(1 - \phi_1 z)$ and $( 1 + \theta_1 z + \theta_2^2 z)$}\\
     &\text{have no common factors.}
     \label{eq:some_equation1}
 \end{align*}
@@ -335,7 +337,7 @@ Third we use the Ljung-Box Test \citep{LjungBox78} to validate that the residual
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,height=0.73\textwidth]{tsdiag_arma_1_2}
+    \includegraphics[width=\textwidth]{tsdiag_arma_1_2}
     \caption{ARMA(1,2)-Model: Standardized Residuals, Auto-correlation function of the Residuals and the p-values for the Ljung-Box-Test at each lag}
     \label{fig:tsdiag_arma_1_2}
 \end{figure}
@@ -362,7 +364,7 @@ In addition, we will give 95 percent confidence bands in case of normally distri
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.5\textwidth]{pred_transformed_series}
+    \includegraphics[width=0.5\textwidth]{pred_transformed_series}
     \caption{Prediction and Confidence Bands for the twice-differenced Series}
     \label{fig:pred_transformed_series}
 \end{figure}
@@ -445,14 +447,14 @@ One possibility could be, for instance, to try first to logarithmize the stronge
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.7\textwidth]{summary_cubicmodel}
+    \includegraphics[width=0.7\textwidth]{summary_cubicmodel}
     \caption{summary statistics of the fitted cubic model}
     \label{fig:summary_cubicmodel}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.7\textwidth]{summary_seasonmodel}
+    \includegraphics[width=0.7\textwidth]{summary_seasonmodel}
     \caption{summary statistics of the fitted seasonal model}
     \label{fig:summary_seasonmodel}
 \end{figure}
@@ -470,7 +472,7 @@ the data of the first period (1993 to 2009) twice-differenced series show indepe
 
 \begin{figure}
     \centering
-    \includegraphics[angle=0,width=0.8\textwidth]{diff2_test_train}
+    \includegraphics[width=0.8\textwidth]{diff2_test_train}
     \caption{mean-centered twice-differenced series, periods from 1993 to 2009 and 2009 to 2018}
     \label{fig:diff2_test_train}
 \end{figure}
