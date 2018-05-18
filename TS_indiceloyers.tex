@@ -27,6 +27,7 @@
 \usepackage[english]{babel}  % language settings
 \usepackage{lmodern}         % font to use
 \usepackage{chngcntr}        % to be able to change figure counters
+\usepackage{makecell}        % make line breaks inside table cells
 
 \usepackage{graphicx}        % use modern graphics formats
 
@@ -75,11 +76,6 @@
 \renewcommand{\floatpagefraction}{.8}  % if more than x % of a page is an image
                                        % it will be a single image page.
                              
-% document settings
-\title{Analysis and Forecasting of the Swiss Rent Index, 1993 to 2018}
-\author{Faralli Zully, Spörri Marc}
-
-\date{\today}
 
 
 
@@ -100,10 +96,51 @@
 % ------------------------------------------------------------------------
 \begin{document}
 
-% titlepage
 
-\maketitle
+% titlepage
+% ------------------------------------------------------------------------
+
+\thispagestyle{empty}  % no pagenumber on this page
+
+\begin{center}
+
+\vspace*{4cm}
+
+\noindent\rule{15cm}{0.4pt}
+
+\vspace*{2cm}
+
+\Huge{\textbf{Analysis and Forecasting of the Swiss Rent Index, 1993 to 2018}}
+
+\vspace{1cm}
+
+\LARGE{Project in Time Series Analysis -- Spring 2018}
+
+\vspace{2cm}
+
+\noindent\rule{15cm}{0.4pt}
+
+\vfill
+
+\large{
+    \today\\
+    University of Neuchâtel\\
+    Faralli Zully, Spörri Marc\\
+    
+}
+
+\vspace{2cm}
+
+\end{center}
+
+
 \newpage
+
+
+
+% TOC
+% ------------------------------------------------------------------------
+
 \tableofcontents
 \newpage
 
@@ -236,18 +273,15 @@ This underlines that the lag1-differenced series is to versatile and contains to
 In contrast, the sample ACF of the lag2-differenced model doesn't indicate a white-noise: there is at least a highly significant at lag1 and the following three lags are touching the $\pm 1.96 / \sqrt{n}$ - 95percent-confidence-bounds, followed by no more significant bars which die out quickly.
 This is a good sign, meaning that on one hand we have at least correlation at lag 1 which is needed to do prediction, on the other hand the covariances seem obviously not too large to be considered time-dependant and therefore we can assume a stationary series here.
 
-\begin{tabular}{|c|c|c|c|c|}
-\hline 
-• lag1-differentiation • lag2-differentiation • lag3-differentiation • lag4-differentiation • \\ 
-\hline 
-• p-value Ljung-Box-Test
-($H_0$: White-noise) • 0.35 • 0.00 • 0.00 • 0.00\\ 
-\hline 
-• p-value Augmented Dickie-Fuller-Test
-($H_0$: Non-Stationarity) • 0.01 • 0.05 • 0.11 • 0.42\\ 
-\hline 
-\label{tab:overview_diffs}
-\end{tabular} 
+\begin{center}
+\begin{tabular}{c|cccc}
+    differentiation  & lag1 & lag2 & lag3 & lag4 \\
+    \hline 
+    \makecell{p-value Ljung-Box-Test\\($H_0$: White-noise)} & 0.35 & 0.00 & 0.00 & 0.00\\
+    \makecell{p-value Augmented Dickie-Fuller-Test\\($H_0$: Non-Stationarity)} & 0.01 & 0.05 & 0.11 & 0.42\\
+    \label{tab:overview_diffs}
+\end{tabular}
+\end{center}
 
 From the tests overview in \cref{tab:overview_diffs} we can see for the lag1-differenced series a p-value of 0.35 for the Ljung-Box-Test.
 That was to be expected, meaning that we cannot reject the Hypothesis $H_0$ that there is independence between the observations \citep{LjungBox78} and therefore confirming the white-noise structure in the lag1-differenced series. \\
@@ -283,12 +317,12 @@ Hence, according to the ACF and PACF plots it looks primarily like an MA(1)-proc
     Its coefficient are generally noted as $phi$ (AR-part) and $theta$ (MA-part).} in order to select our model.\\
 From the AICC-Matrix (\cref{fig:aicc_matrix}) we can see that an MA(1)-model gives us the lowest AICC-value which means this model is supposed to perform best. That confirms our guess from the sample ACF/PACF plots.
 However, we are also going to fit an ARMA(1,1) and an ARMA(1,2) model, because both of them showed as well very low AICC-values (see AICC-Matrix in figure).\footnote{
-    Estimations by the autofit()-function of the "itsmr" package of R (\TODO{\citation{R Core Team}}) suggest as well an MA(1)-model as best model with a very similar estimate for $\theta_1$ and very close AICC.
+    Estimations by the autofit()-function of the "itsmr" package of R by \cite{R_itsmr} suggest as well an MA(1)-model as best model with a very similar estimate for $\theta_1$ and very close AICC.
     Furthermore ARMA(1,1) and ARMA(1,2) are also suggested by the autofit()-function showing very low AICC-values.
     This can be seen as a succesful robustness check in terms of order selection of p and q.
 }
 
-We now estimate coefficients (\cite[p.~83]{bd02}) for these three model candidates   by the arima()-function of the R-package "stats" \TODO{\citation{R Core Team}}.
+We now estimate coefficients (\cite[p.~83]{bd02}) for these three model candidates by the arima()-function of the R-package "stats" \citep{R_core}.
 
 
 \begin{align*}
@@ -335,6 +369,17 @@ with the estimated coefficients and the corresponding standard errors (in bracke
     \hat{\phi}_1    &= \num{ 0.7974 \pm 0.2055}  &  \hat{\theta}_1  &= \num{ 0.3092 \pm 0.2528} &
     \hat{\theta}_2  &= \num{-0.6685 \pm 0.2583}  &  \hat{\sigma}^2  &= \num{ 0.1793 }  
 \end{align*}
+
+\TODO{clean up the mess above, write it into fliesstext maybe like the following?}
+
+The ARMA(1,2)-model
+    \( X_t - \phi_1 X_{t-1} = Z_t + \theta_1 Z_{t-1} + \theta_2 Z_{t-2} \),
+    where \( {Z_t} \sim WN(0,\sigma^2) \)
+    and with the estimated coefficients and the corresponding standard errors of
+    \(\hat{\phi}_1 = \num{ 0.80 \pm 0.21} \),
+    \( \hat{\theta}_1  = \num{ 0.31 \pm 0.26} \),
+    \( \hat{\theta}_2 = \num{-0.67 \pm 0.26} \) and
+    \( \hat{\sigma}^2 = \num{ 0.18 } \).
 
 
 First we can see that ARMA(1,1)-model is not supposed to be a good model. Its estimated $\hat{\phi}_1=0.13$ is not significant, since its standard error of 0.11 is nearly as high as the coefficient.\\
