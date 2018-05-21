@@ -28,6 +28,8 @@
 \usepackage{lmodern}         % font to use
 \usepackage{chngcntr}        % to be able to change figure counters
 \usepackage{makecell}        % make line breaks inside table cells
+\usepackage{float}           % lets you place floats at a fixed place. DONT use it regulary!
+\usepackage{placeins}        % lets you use floatbarriers
 
 \usepackage{graphicx}        % use modern graphics formats
 
@@ -347,21 +349,27 @@ However, we will also fit an ARMA(1,1) and an ARMA(1,2) model, because both of t
 }
 
 We will now estimate coefficients for these three model candidates by the arima-function of the R-package "stats" (\citet{R_stats}).\footnote{In brackets standard errors of the estimated coefficients.}
-
 \begin{align*}
-   \text{MA(1)-model: } X_t = Z_t + \theta_1 Z_{t-1}
-    & \text{where ${Z_t} \sim WN(0,\sigma^2)$}  \\
-\hat{\theta}_1  &= \num{ 1.00 \pm 0.07}  &  \hat{\sigma}^2  &= \num{ 0.18 }
+    \text{MA(1)-model:} \quad & X_t = Z_t + \theta_1 Z_{t-1} \\
+    & \text{where:} \  {Z_t} \sim WN(0,\sigma^2)  \\
+    & \text{with:} \ 
+        \hat{\theta}_1 = \num{ 1.00 \pm 0.07}, \ 
+        \hat{\sigma}^2 = \num{ 0.18 }
 \\
+    \text{ARMA(1,1)-model:} \quad & X_t - \phi_1 X_{t-1} = Z_t + \theta_1 Z_{t-1} \\
+    & \text{where:} \  {Z_t} \sim WN(0,\sigma^2) \\
+    & \text{with:} \ 
+        \hat{\phi}_1 = \num{ 0.13 \pm 0.11}, \ 
+        \hat{\theta}_1 = \num{ 0.98 \pm 0.08}, \ 
+        \hat{\sigma}^2 = \num{ 0.18 }
 \\
-    \text{ARMA(1,1)-model: }X_t - \phi_1 X_{t-1} &= Z_t + \theta_1 Z_{t-1}
-    & \text{where ${Z_t} \sim WN(0,\sigma^2)$} \\
-\hat{\phi}_1    &= \num{ 0.13 \pm 0.11}  &  \hat{\theta}_1  &= \num{ 0.98 \pm 0.08}  &  \hat{\sigma}^2  &= \num{ 0.18 }
-\\
-\\
-    \text{ARMA(1,2)-model: }X_t - \phi_1 X_{t-1} &= Z_t + \theta_1 Z_{t-1} + \theta_2 Z_{t-2}
-    & \text{where ${Z_t} \sim WN(0,\sigma^2)$} \\
-\hat{\phi}_1    &= \num{ 0.80 \pm 0.21}  &  \hat{\theta}_1  &= \num{ 0.31 \pm 0.25} & \hat{\theta}_2  &= \num{-0.67 \pm 0.26}  &  \hat{\sigma}^2  &= \num{0.18}   
+    \text{ARMA(1,2)-model:} \quad & X_t - \phi_1 X_{t-1} = Z_t + \theta_1 Z_{t-1} + \theta_2 Z_{t-2} \\
+    & \text{where:} \  {Z_t} \sim WN(0,\sigma^2) \\
+    & \text{and:} \ 
+        \hat{\phi}_1 = \num{ 0.80 \pm 0.21}, \ 
+        \hat{\theta}_1 = \num{ 0.31 \pm 0.25}, \ 
+        \hat{\theta}_2 = \num{-0.67 \pm 0.26}, \ 
+        \hat{\sigma}^2 = \num{0.18}
 \end{align*}
 
 First we can see that an ARMA(1,1)-model is not supposed to be a good model.
@@ -444,15 +452,16 @@ However, it would be desirable to reduce the variance and likewise the confidenc
     \label{fig:pred_initial_series}
 \end{figure}
 
-The prediction of the initial series bases on retransformation of the lag2-differenced series into the initial series by the following equations: 
-
+The prediction of the initial series bases on retransformation of the lag2-differenced series into the initial series by the equations
 \begin{align*}
-C_t = \nabla_2 Y_t = Y_t - Y_{t-2}  & \text{where $Y_t$ is the initial time series series and $C_t$ the lag2-differenced series} \\
-X_t = C_t - \mu_{C_t} & \text{where $X_t$ is the mean-centered differenced series}\\
-Y_{n+h} = C_{n+h} + C_{n+h-1} + C_{n+h-2} + ... + C_{n+1} + Y_n  \\
-P_n Y_{n+h} = h*\mu + Y_n+ P_n X_{n+1} + ... + P_n X_{n+h}  
+    C_t &= \nabla_2 Y_t = Y_t - Y_{t-2}\\
+    X_t &= C_t - \mu_{C_t} \\
+    Y_{n+h} &= C_{n+h} + C_{n+h-1} + C_{n+h-2} + \ldots + C_{n+1} + Y_n  \\
+    P_n Y_{n+h} &= h*\mu + Y_n+ P_n X_{n+1} + \ldots + P_n X_{n+h}
+    \text{\ ,}
 \end{align*}
-The $P_n Y_{n+h}$ represent the $h=8$ predicted future values for the initial time series, where $h*\mu$ represents the rate of the increase (slope) and the $P_n X_{n+1} + ... + P_n X_{n+h} $ are obtained by the MA(1)- and ARMA(1,2)-model, respectively.
+where $Y_t$ is the initial time series series, $C_t$ the lag2-differenced series and $X_t$ is the mean-centered differenced series.
+The $P_n Y_{n+h}$ represent the $h=8$ predicted future values for the initial time series, where $h*\mu$ represents the rate of the increase (slope) and the $P_n X_{n+1} + \ldots + P_n X_{n+h} $ are obtained by the MA(1)- and ARMA(1,2)-model, respectively.
 
 In \cref{fig:pred_initial_series} we can see that the predictions for the initial time series are reasonable for both models MA(1) and ARMA(1,2), indicating a strongly monotonic trend in the future.
 However, due to the smoother and slower convergence to the mean, we definitely want to stick with the more traceable and more realistic ARMA(1,2)-model as our favourite model.
@@ -505,7 +514,7 @@ For instance trying a locally best invariant unbiased (LBIU) approach \cite{davi
 Even though a unit root on the moving-average polynomial is no problem in general, other estimation methods could be worth a try, especially if we take into account that a simulated MA(1)-process with $\theta_1 = 1.00 $ shows a model PACF which decreases much slower than the sample PACF (see \cref{fig:sim_ma_1_00} in the \cref{sec:simulations}), suggesting that a $\theta_1 = 1.00 $ might be overestimated, therefore alternative estimation methods could be justified.
 A simulated model with $\theta_1 = 0.50 $ for instance would look more like the sample ACF/PACF (see \cref{fig:sim_ma_1_05} in \cref{sec:simulations}).
 
-\pagebreak
+\clearpage
 
 % ------------------------------------------------------------------------
 
@@ -523,28 +532,28 @@ A simulated model with $\theta_1 = 0.50 $ for instance would look more like the 
 \section{Summary Statistics}
 \label{sec:summarystat}
 
-\begin{figure} 
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{summary_linearmodel}
     \caption{Summary statistics of the fitted linear model including check for seasonal components}
     \label{fig:summary_linearmodel}
 \end{figure}
 
-\begin{figure} 
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{summary_quadraticmodel}
     \caption{Summary statistics of the fitted quadratic model including check for seasonal components}
     \label{fig:summary_quadraticmodel}
 \end{figure}
 
-\begin{figure} 
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{summary_cubicmodel}
     \caption{Summary statistics of the fitted cubic model including check for seasonal components}
     \label{fig:summary_cubicmodel}
 \end{figure}
 
-\begin{figure} 
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{summary_logmodel}
     \caption{Summary statistics of the fitted logarithmic model including check for seasonal components}
@@ -552,9 +561,11 @@ A simulated model with $\theta_1 = 0.50 $ for instance would look more like the 
 \end{figure}
 
 
+
 \section{AICC-Matrix}
 \label{sec:aicc_matrix}
-\begin{figure} 
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{aicc_matrix}
     \caption{AICC-Matrix (\citep{aic86})}
@@ -565,33 +576,33 @@ A simulated model with $\theta_1 = 0.50 $ for instance would look more like the 
 
 \section{ACF/PACF-Plots of the unused polynomial Models}
 \label{sec:ACFPACFunused}
-\begin{figure} 
-\centering
-\includegraphics[angle=0,
-width=0.6\textwidth]{acf_pacf_linearmodel}
-\caption{Sample Autocorrelation and Partial autocorrelation function of the linear model
-\label{fig:acf_pacf_linearmodel}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{acf_pacf_linearmodel}
+    \caption{Sample Autocorrelation and Partial autocorrelation function of the linear model}
+    \label{fig:acf_pacf_linearmodel}
 \end{figure}
-\begin{figure} 
-\centering
-\includegraphics[angle=0,
-width=0.6\textwidth]{acf_pacf_quadraticmodel}
-\caption{Sample Autocorrelation and Partial autocorrelation function of the quadratic model
-\label{fig:acf_pacf_quadraticmodel}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{acf_pacf_quadraticmodel}
+    \caption{Sample Autocorrelation and Partial autocorrelation function of the quadratic model}
+    \label{fig:acf_pacf_quadraticmodel}
 \end{figure}
-\begin{figure} 
-\centering
-\includegraphics[angle=0,
-width=0.7\textwidth]{acf_pacf_cubicmodel}
-\caption{Sample Autocorrelation and Partial autocorrelation function of the cubic model
-\label{fig:acf_pacf_cubicmodel}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{acf_pacf_cubicmodel}
+    \caption{Sample Autocorrelation and Partial autocorrelation function of the cubic model}
+    \label{fig:acf_pacf_cubicmodel}
 \end{figure}
-\begin{figure} 
-\centering
-\includegraphics[angle=0,
-width=0.7\textwidth]{acf_pacf_logmodel}
-\caption{Sample Autocorrelation and Partial autocorrelation function of the logarithmic model
-\label{fig:acf_pacf_logmodel}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{acf_pacf_logmodel}
+    \caption{Sample Autocorrelation and Partial autocorrelation function of the logarithmic model}
+    \label{fig:acf_pacf_logmodel}
 \end{figure}
 
 
@@ -600,14 +611,15 @@ width=0.7\textwidth]{acf_pacf_logmodel}
 
 \section{Simulations of the model ACF/PACF}
 \label{sec:simulations}
-\begin{figure} 
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{sim_ma_1_00}
     \caption{Model ACF and PACF of a simulated MA(1)-process with $\theta_1 = 1.00$}
     \label{fig:sim_ma_1_00}
 \end{figure}
 
-\begin{figure} 
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{sim_ma_1_05}
     \caption{Model ACF and PACF of a simulated MA(1)-process with $\theta_1 = 0.50$}
